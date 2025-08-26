@@ -1,21 +1,8 @@
-up:
-	docker compose up --build
+    run:
+		uvicorn app.main:app --reload --port 8000
 
-down:
-	docker compose down
+    db-upgrade:
+		alembic upgrade head
 
-migrate:
-	docker compose run backend alembic upgrade head
-
-revision:
-	docker compose run backend alembic revision --autogenerate -m "$(msg)"
-
-logs:
-	docker compose logs -f backend
-
-format:
-	docker compose run backend black .
-
-
-test:
-	docker compose run backend pytest backend/tests
+    db-rev:
+		alembic revision --autogenerate -m "$(m)"
