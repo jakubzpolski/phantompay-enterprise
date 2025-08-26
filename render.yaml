@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: phantompay-backend
+    env: python
+    rootDirectory: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port 10000
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10
+
+  - type: web
+    name: phantompay-frontend
+    env: node
+    rootDirectory: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    plan: free
+git add render.yaml
+git commit -m "Add Render configuration"
+git push
