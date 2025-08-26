@@ -1,22 +1,32 @@
 services:
   - type: web
-    name: phantompay-backend
-    env: python
-    rootDirectory: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port 10000
-    plan: free
+    name: phantompay-backend-pro
+    env: docker
+    plan: starter
+    autoDeploy: true
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.10
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: APP_BASE_URL
+        value: https://YOUR_FRONTEND_URL.vercel.app
+      - key: DATABASE_URL
+        fromService:
+          name: phantompay-prodb
+          type: postgres
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PHANTOMPAY_FEE_BPS
+        value: "100"
+      - key: CURRENCY
+        value: GBP
+    healthCheckPath: /api/health
 
-  - type: web
-    name: phantompay-frontend
-    env: node
-    rootDirectory: frontend
-    buildCommand: npm install && npm run build
-    startCommand: npm run start
-    plan: free
-git add render.yaml
-git commit -m "Add Render configuration"
-git push
+  - type: postgres
+    name: phantompay-prodb
+    plan: starter
+    ipAllowList: []
+    databaseName: phantompay
+    user: phantompay_user
